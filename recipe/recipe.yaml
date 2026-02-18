@@ -276,8 +276,8 @@ outputs:
             - pytorch-gpu ==${{ version | replace("-", ".") }}
             - pytorch-cpu <0.0a0
         - if: cuda_compiler_version != "None"
-          then: pytorch ${{ version | replace("-", ".") }} ${{ cuda_build_prefix }}_*_${{ build_number }}
-          else: pytorch ${{ version | replace("-", ".") }} ${{ cpu_build_prefix }}_*_${{ build_number }}
+          then: pytorch ==${{ version | replace("-", ".") }} ${{ cuda_build_prefix }}_*_${{ build_number }}
+          else: pytorch ==${{ version | replace("-", ".") }} ${{ cpu_build_prefix }}_*_${{ build_number }}
         # if using OpenBLAS, ensure that a version compatible with OpenMP is used
         - if: unix and blas_impl != "mkl"
           then:
@@ -534,8 +534,8 @@ outputs:
         - python
       run:
         - if: cuda_compiler_version != "None"
-          then: pytorch ${{ version | replace("-", ".") }} cuda*_${{ blas_impl }}_py${{ python | version_to_buildstring }}*${{ build_number }}
-          else: pytorch ${{ version | replace("-", ".") }} cpu_${{ blas_impl }}_py${{ python | version_to_buildstring }}*${{ build_number }}
+          then: pytorch ==${{ version | replace("-", ".") }} cuda*_${{ blas_impl }}_py${{ python | version_to_buildstring }}*${{ build_number }}
+          else: pytorch ==${{ version | replace("-", ".") }} cpu_${{ blas_impl }}_py${{ python | version_to_buildstring }}*${{ build_number }}
     tests:
       - python:
           imports:
@@ -676,7 +676,7 @@ outputs:
         ignore_binary_files: true
     requirements:
       run:
-        - pytorch ${{ version | replace("-", ".") }} ${{ cpu_build_prefix }}_*${{ build_number }}
+        - pytorch ==${{ version | replace("-", ".") }} ${{ cpu_build_prefix }}_*${{ build_number }}
     tests:
       - python:
           imports:
@@ -700,7 +700,7 @@ outputs:
         ignore_binary_files: true
     requirements:
       run:
-        - pytorch ${{ version | replace("-", ".") }} cuda*_${{ blas_impl }}_*${{ build_number }}
+        - pytorch ==${{ version | replace("-", ".") }} cuda*_${{ blas_impl }}_*${{ build_number }}
     tests:
       - python:
           imports:
