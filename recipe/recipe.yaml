@@ -175,7 +175,7 @@ outputs:
         # When you change 3.12 here, change it in build.sh/bld.bat as well
         - if: build_platform != target_platform
           then:
-            - python 3.12
+            - python 3.12.*
             - cross-python_${{ target_platform }}
             - numpy *
         - ${{ stdlib('c') }}
@@ -231,7 +231,7 @@ outputs:
         - if: cuda_compiler_version == "12.8"
           then: magma
         # other requirements
-        - python 3.12
+        - python 3.12.*
         - numpy *
         - pip
         - setuptools
@@ -269,11 +269,11 @@ outputs:
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
         - if: cuda_compiler_version == "None"
           then:
-            - pytorch-cpu ${{ version | replace("-", ".") }}
+            - pytorch-cpu ==${{ version | replace("-", ".") }}
             - pytorch-gpu <0.0a0
         - if: cuda_compiler_version != "None"
           then:
-            - pytorch-gpu ${{ version | replace("-", ".") }}
+            - pytorch-gpu ==${{ version | replace("-", ".") }}
             - pytorch-cpu <0.0a0
         - if: cuda_compiler_version != "None"
           then: pytorch ${{ version | replace("-", ".") }} ${{ cuda_build_prefix }}_*_${{ build_number }}
@@ -503,11 +503,11 @@ outputs:
         # https://github.com/conda-forge/pytorch-cpu-feedstock/issues/65
         - if: cuda_compiler_version == "None"
           then:
-            - pytorch-cpu ${{ version | replace("-", ".") }}
+            - pytorch-cpu ==${{ version | replace("-", ".") }}
             - pytorch-gpu <0.0a0
         - if: cuda_compiler_version != "None"
           then:
-            - pytorch-gpu ${{ version | replace("-", ".") }}
+            - pytorch-gpu ==${{ version | replace("-", ".") }}
             - pytorch-cpu <0.0a0
       ignore_run_exports:
         by_name:
