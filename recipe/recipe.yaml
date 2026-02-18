@@ -620,7 +620,7 @@ outputs:
             then: export OMP_NUM_THREADS=4
 
           # the opengpu server has a card with sm_70, an architecture dropped by CUDA 13.0
-          - if: not cuda_compiler_version.startswith("13") and (not aarch64 or python == "3.12")
+          - if: (cuda_compiler_version | default("None") | split(".") | first) != "13" and (not aarch64 or python == "3.12")
             then:
               - >-
                 pytest
@@ -630,9 +630,9 @@ outputs:
                 -m "not hypothesis" --durations=50 --timeout=1200 --disable-warnings
 
           # regression test for https://github.com/conda-forge/pytorch-cpu-feedstock/issues/329
-          - if: not python.startswith("3.13") and unix
+          - if: python != "3.13" and unix
             then: test ! -f $SP_DIR/functorch/__pycache__/__init__.cpython-313.pyc
-          - if: not python.startswith("3.13") and win
+          - if: python != "3.13" and win
             then: if exist %SP_DIR%\functorch\__pycache__\__init__.cpython-313.pyc exit 1
 
           # test integrity of CMake metadata and ensure that THPLayoutType is visible as a symbol from libtorch_python
