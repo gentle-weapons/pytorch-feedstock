@@ -661,52 +661,50 @@ outputs:
   #############################################################################
   # Output 4: pytorch-cpu (metapackage, only when no CUDA)
   #############################################################################
-  - if: cuda_compiler_version == "None"
-    then:
-      package:
-        name: pytorch-cpu
-        version: ${{ version | replace("-", ".") }}
-      build:
-        number: ${{ build_number }}
-        skip:
-          - '"pytorch_rc" in channel_targets and "rc" not in version'
-          - '"pytorch_rc" not in channel_targets and "rc" in version'
-          - '"gpu" in github_actions_labels'
-        string: ${{ cpu_build_prefix }}_h${{ hash }}_${{ build_number }}
-        prefix_detection:
-          ignore_binary_files: true
-      requirements:
-        run:
-          - pytorch ${{ version | replace("-", ".") }} ${{ cpu_build_prefix }}_*${{ build_number }}
-      tests:
-        - python:
-            imports:
-              - torch
+  - package:
+      name: pytorch-cpu
+      version: ${{ version | replace("-", ".") }}
+    build:
+      number: ${{ build_number }}
+      skip:
+        - 'cuda_compiler_version != "None"'
+        - '"pytorch_rc" in channel_targets and "rc" not in version'
+        - '"pytorch_rc" not in channel_targets and "rc" in version'
+        - '"gpu" in github_actions_labels'
+      string: ${{ cpu_build_prefix }}_h${{ hash }}_${{ build_number }}
+      prefix_detection:
+        ignore_binary_files: true
+    requirements:
+      run:
+        - pytorch ${{ version | replace("-", ".") }} ${{ cpu_build_prefix }}_*${{ build_number }}
+    tests:
+      - python:
+          imports:
+            - torch
 
   #############################################################################
   # Output 5: pytorch-gpu (metapackage, only when CUDA)
   #############################################################################
-  - if: cuda_compiler_version != "None"
-    then:
-      package:
-        name: pytorch-gpu
-        version: ${{ version | replace("-", ".") }}
-      build:
-        number: ${{ build_number }}
-        skip:
-          - '"pytorch_rc" in channel_targets and "rc" not in version'
-          - '"pytorch_rc" not in channel_targets and "rc" in version'
-          - '"cpu" in github_actions_labels'
-        string: ${{ cuda_build_prefix }}_h${{ hash }}_${{ build_number }}
-        prefix_detection:
-          ignore_binary_files: true
-      requirements:
-        run:
-          - pytorch ${{ version | replace("-", ".") }} cuda*_${{ blas_impl }}_*${{ build_number }}
-      tests:
-        - python:
-            imports:
-              - torch
+  - package:
+      name: pytorch-gpu
+      version: ${{ version | replace("-", ".") }}
+    build:
+      number: ${{ build_number }}
+      skip:
+        - 'cuda_compiler_version == "None"'
+        - '"pytorch_rc" in channel_targets and "rc" not in version'
+        - '"pytorch_rc" not in channel_targets and "rc" in version'
+        - '"cpu" in github_actions_labels'
+      string: ${{ cuda_build_prefix }}_h${{ hash }}_${{ build_number }}
+      prefix_detection:
+        ignore_binary_files: true
+    requirements:
+      run:
+        - pytorch ${{ version | replace("-", ".") }} cuda*_${{ blas_impl }}_*${{ build_number }}
+    tests:
+      - python:
+          imports:
+            - torch
 
 about:
   homepage: https://pytorch.org/
